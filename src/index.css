@@ -1,0 +1,169 @@
+*{
+  box-sizing: border-box;
+  
+}
+
+body{
+    margin: 0;
+    font-family: "Hanken Grotesk", Arial, sans-serif;
+    background-color: #262626;
+    color: #D9D9D9;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.game-container{
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+}
+
+.game-header{
+ 
+  text-align: center;
+}
+
+.title{
+  font-size: 20px;
+  font-weight: medium;
+  color: #F9F4DA;
+}
+.description{
+  font-size: 14px;
+  font-weight: medium;
+  color: #8E8E8E;
+  max-width: 350px;
+}
+
+.notification{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #F9F4DA ;
+  border-radius: 4px;
+  margin-block: 30px;
+  width: 100%;
+  max-width: 350px;
+  padding: 10px;
+}
+
+.notification.won-notification{
+  background-color: #10A95B;
+  
+}
+
+.notification.lost-notification {
+  background-color: #BA2A2A ; /* Ensures priority */
+}
+
+.notification h2{
+  margin: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.notification  p{
+  margin: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.chips-section{
+  display: flex;
+  max-width: 350px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 36px;
+}
+
+.chip{
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  position: relative;
+}
+.chip.lost::before {
+  content: "💀";
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-size: 0.85rem;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.language-display{
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.selected-letter{
+  background-color: #323232;
+  height: 40px;
+  width: 40px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  border-bottom: 2px solid #F9F4DA;
+  font-size: 1.125rem;
+}
+
+.keyboard-section{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  max-width: 480px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.alphabet-button{
+  height: 40px;
+  width: 40px;
+  background-color: #FCBA29;
+  color: #1E1E1E;
+  border: 1px solid #D7D7D7;
+  border-radius: 4px ;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  
+}
+.alphabet-button.correct {
+  background-color: #10A95B; /* Change only the background color */
+}
+.alphabet-button.wrong{
+  background-color: #EC5D49;
+}
+
+
+button.new-game {
+  background-color: #11B5E5;
+  border: 1px solid #D7D7D7;
+  border-radius: 4px;
+  width: 225px;
+  height: 40px;
+  padding: 6px 12px;
+  display: block;
+  margin-inline: auto;
+  cursor: pointer;
+}
