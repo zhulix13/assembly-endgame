@@ -1,24 +1,39 @@
 import { useState } from 'react';
 import { languages } from '../languages';
 import clsx from 'clsx';
+import { getFarewellText } from '../utils';
+import { words } from '../words';
+import ReactConfetti from 'react-confetti';
+import { requestFormReset } from 'react-dom';
 
 function App() {
  
-  const [currentWord, setCurrentWord] = useState('react')
-  const lettersArray = currentWord.split('');
 
+  const [currentWord, setCurrentWord] = useState(() => getRandomWord())
+  
+
+  function getRandomWord() {
+    const randomIndex = Math.floor(Math.random() * (words.length )); // Include 500
+    return words[randomIndex]
+    
+}
+
+
+  const lettersArray = currentWord.split('');
   const alphabet = 'abcdefghijklmnopqrstuvwxyz'
   const alphabetArray = alphabet.split('');
   
   const [guessedLetters, setGuessedLetters] = useState([]);
-  console.log(guessedLetters)
+  
 
   const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length
   
   const isGameWon = lettersArray.every(letter => guessedLetters.includes(letter))
   const isGameLost = wrongGuessCount >= 8 
   const isGameOver = isGameLost || isGameWon
-console.log([isGameLost, isGameWon, isGameOver ])
+  const initGuessChancesRem = languages.length - 1
+  const lastGuessedLetter = guessedLetters[guessedLetters.length - 1]
+  const isLastGuessedIncorrect = lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
 
   function handleLetterClick(letter) {
     setGuessedLetters((prev) => 
@@ -29,13 +44,20 @@ console.log([isGameLost, isGameWon, isGameOver ])
   
   function resetGame(){
     setGuessedLetters([])
+    setCurrentWord(() => getRandomWord())
   }
 
-  
+ 
   
   return (
     <>
+    {isGameWon && <ReactConfetti 
+          recycle = {false}
+          numberOfPieces={1000}
+          
+        /> }
       <main className='game-container'>
+        
           <header>
         <nav className='game-header'>
           <h2 className='title'>Assembly: Endgame</h2>
@@ -45,32 +67,61 @@ console.log([isGameLost, isGameWon, isGameOver ])
         </header> 
 
         <section
+          aria-live='polite'
+          role='status'
           className={clsx('notification', {
             'won-notification': isGameWon,
             'lost-notification': isGameLost,
+            'farewell': !isGameOver && isLastGuessedIncorrect
           })}
         >
-          {isGameWon ? (
-            <>
-              <h2>You win</h2>
-              <p>Well done! 🎉</p>
-            </>
-          ) : isGameLost ? (
-            <>
-              <h2>Game over!</h2>
-              <p>You lose! Better start learning Assembly 😭</p>
-            </>
-          ) : null}
+          {
+              
+              isGameWon ? (
+                <>
+                  <h2>You win</h2>
+                  <p>Well done! 🎉</p>
+                </>
+              ) : isGameLost ? (
+                <>
+                  <h2>Game over!</h2>
+                  <p>You lose! Better start learning Assembly 😭</p>
+                </>
+              ) : isLastGuessedIncorrect && !isGameOver ? (
+                <p className='farewell-message'> {getFarewellText(languages[wrongGuessCount - 1].name)} </p>
+              ) : null
+            
+          }
         </section>
 
-
+          {/* Combined Visually hidden region for aria-live status updates */}
+          <section 
+            aria-live='polite'
+            role='status'
+            className='sr-only'
+          >
+            <p>
+              {currentWord.includes(lastGuessedLetter) ? 
+                `Correct. The letter ${lastGuessedLetter} is in the word.` :
+                `Sorry. The letter ${lastGuessedLetter} is not in the word.`
+              }
+              You have {initGuessChancesRem - wrongGuessCount} chances left.
+            </p>
+            <p>
+              Current Word: {lettersArray.map(letter => 
+              guessedLetters.includes(letter) ? letter + '.' : 'blank.'
+                ).join('')}
+            </p>
+                
+          </section>
+                {/* The region ends here */}
 
         <section className="chips-section">
           {languages.map((language, index) => 
             {
               const className = clsx(
                 'chip',
-                {lost: index < wrongGuessCount}
+                {'lost': index < wrongGuessCount}
               )
               
            return ( <span style={{backgroundColor: language.backgroundColor , color: language.color}} key={language.name} className={className}>
@@ -82,15 +133,19 @@ console.log([isGameLost, isGameWon, isGameOver ])
 
           <section className='language-display'>
             {
-              lettersArray.map((letter, index) => 
-                {
-                  
-              return ( 
-              <span key={index} className='selected-letter'>
-                  {guessedLetters.includes(letter) ? letter.toUpperCase() : ''}
-                </span>
+              lettersArray.map((letter, index) => {
+                const letterClassName = clsx(
+                  'selected-letter',
+                  {"missed-letter": isGameLost && !guessedLetters.includes(letter)}
                 )
-                }
+                return ( 
+              <span key={index} className = {letterClassName} >
+                  {guessedLetters.includes(letter) ? letter.toUpperCase() :
+                   isGameOver ? letter.toUpperCase() : ''
+                  }
+                </span>
+                )}
+                
               )
             }
           </section>
@@ -116,6 +171,9 @@ console.log([isGameLost, isGameWon, isGameOver ])
                     <button className= {className}
                    key={index}
                    onClick={() => handleLetterClick(letter)}
+                   disabled = {isGameOver} 
+                   aria-disabled = {guessedLetters.includes(letter)}
+                   aria-label = {`Letter ${letter}`}
                    >{letter.toUpperCase()}
                    
                   </button>

@@ -60,6 +60,10 @@ body{
   background-color: #BA2A2A ; /* Ensures priority */
 }
 
+.notification.farewell {
+    background-color: #7A5EA7;
+    border: 1px dashed #323232;
+}
 .notification h2{
   margin: 5px;
   font-size: 20px;
@@ -67,6 +71,10 @@ body{
   text-align: center;
 }
 
+.farewell-message{
+  font-style: italic;
+   font-weight: 400;
+}
 .notification  p{
   margin: 5px;
   font-size: 16px;
@@ -115,13 +123,15 @@ body{
   background-color: #323232;
   height: 40px;
   width: 40px;
-  
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
   border-bottom: 2px solid #F9F4DA;
   font-size: 1.125rem;
+}
+.selected-letter.missed-letter{
+  color: rgb(238, 68, 68);
 }
 
 .keyboard-section{
@@ -154,6 +164,10 @@ body{
 .alphabet-button.wrong{
   background-color: #EC5D49;
 }
+.alphabet-button:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 
 button.new-game {
@@ -166,4 +180,16 @@ button.new-game {
   display: block;
   margin-inline: auto;
   cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
